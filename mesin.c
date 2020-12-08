@@ -1,23 +1,24 @@
 #include "header.h"
 
-void makeTree(char c, tree *T)
+void makeTree(char c[], tree *T)
 {
     simpul *node;
     node = (simpul *)malloc(sizeof(simpul));
-    node->kontainer = c;
+    strcpy(node->kontainer, c);
     node->sibling = NULL;
     node->child = NULL;
     (*T).root = node;
 }
 
-void addChild(char c, simpul *root)
+void addChild(char c[], simpul *root)
 {
     if (root != NULL)
     { /* jika simpul root tidak kosong, berarti 
         dapat ditambahkan simpul anak */
         simpul *baru;
         baru = (simpul *)malloc(sizeof(simpul));
-        baru->kontainer = c;
+        strcpy(baru->kontainer, c);
+
         baru->child = NULL;
         if (root->child == NULL)
         {
@@ -87,7 +88,7 @@ void delAll(simpul *root)
     }
 }
 
-void delChild(char c, simpul *root)
+void delChild(char c[], simpul *root)
 {
     if (root != NULL)
     {
@@ -96,7 +97,7 @@ void delChild(char c, simpul *root)
         {
             if (hapus->sibling == NULL)
             { /*jika hanya mempunyai satu anak*/
-                if (root->child->kontainer == c)
+                if (strcmp(root->child->kontainer, c) == 0)
                 {
                     delAll(root->child);
                     root->child = NULL;
@@ -114,7 +115,7 @@ void delChild(char c, simpul *root)
                 int ketemu = 0;
                 while ((hapus->sibling != root->child) && (ketemu == 0))
                 {
-                    if (hapus->kontainer == c)
+                    if (strcmp(hapus->kontainer, c) == 0)
                     {
                         ketemu = 1;
                     }
@@ -124,7 +125,7 @@ void delChild(char c, simpul *root)
                         hapus = hapus->sibling;
                     }
                 } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-                if ((ketemu == 0) && (hapus->kontainer == c))
+                if ((ketemu == 0) && (strcmp(hapus->kontainer, c) == 0))
                 {
                     ketemu = 1;
                 }
@@ -172,23 +173,24 @@ void delChild(char c, simpul *root)
     }
 }
 
-simpul *findSimpul(char c, simpul *root)
+simpul *findSimpul(char c[], simpul *root)
 {
     simpul *hasil = NULL;
     if (root != NULL)
     {
-        if (root->kontainer == c)
+        if (strcmp(root->kontainer, c) == 0)
         {
             hasil = root;
         }
         else
         {
             simpul *bantu = root->child;
+
             if (bantu != NULL)
             {
                 if (bantu->sibling == NULL)
                 { /*jika memiliki satu simpulanak*/
-                    if (bantu->kontainer == c)
+                    if (strcmp(bantu->kontainer, c) == 0)
                     {
                         hasil = bantu;
                     }
@@ -202,7 +204,7 @@ simpul *findSimpul(char c, simpul *root)
                     int ketemu = 0;
                     while ((bantu->sibling != root->child) && (ketemu == 0))
                     {
-                        if (bantu->kontainer == c)
+                        if (strcmp(bantu->kontainer, c) == 0)
                         {
                             hasil = bantu;
                             ketemu = 1;
@@ -215,7 +217,7 @@ simpul *findSimpul(char c, simpul *root)
                     } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
                     if (ketemu == 0)
                     {
-                        if (bantu->kontainer == c)
+                        if (strcmp(bantu->kontainer, c) == 0)
                         {
                             hasil = bantu;
                         }
@@ -235,7 +237,7 @@ void printTreePreOrder(simpul *root)
 {
     if (root != NULL)
     {
-        printf(" %c ", root->kontainer);
+        printf(" %s ", root->kontainer);
         simpul *bantu = root->child;
         if (bantu != NULL)
         {
@@ -244,7 +246,8 @@ void printTreePreOrder(simpul *root)
                 printTreePreOrder(bantu);
             }
             else
-            { /*jika memiliki banyak simpulanak*/ /*mencetak simpul anak*/
+            { /*jika memiliki banyak simpul anak*/
+                /*mencetak simpul anak*/
                 while (bantu->sibling != root->child)
                 {
                     printTreePreOrder(bantu);
@@ -281,7 +284,7 @@ void printTreePostOrder(simpul *root)
                 printTreePostOrder(bantu);
             }
         }
-        printf(" %c ", root->kontainer);
+        printf(" %s ", root->kontainer);
     }
 }
 
@@ -290,7 +293,8 @@ void copyTree(simpul *root1, simpul **root2)
     if (root1 != NULL)
     {
         (*root2) = (simpul *)malloc(sizeof(simpul));
-        (*root2)->kontainer = root1->kontainer;
+        strcpy((*root2)->kontainer, root1->kontainer);
+
         (*root2)->sibling = NULL;
         (*root2)->child = NULL;
         if (root1->child != NULL)
@@ -320,7 +324,7 @@ int isEqual(simpul *root1, simpul *root2)
     int hasil = 1;
     if ((root1 != NULL) && (root2 != NULL))
     {
-        if (root1->kontainer != root2->kontainer)
+        if (strcmp(root1->kontainer, root2->kontainer) != 0)
         {
             hasil = 0;
         }

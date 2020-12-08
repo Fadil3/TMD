@@ -4,112 +4,86 @@ int main()
 {
     tree T;
     int n, m = 0;
+
+    //input banyaknya data
+    scanf(" %d", &n);
+
+    //tampungan
     char parent[100];
     char child[100];
+    char akar[100];
     // parent#child#jumlah_bawaan
-    int i = 0;
-    simpul *node;
-    do
+
+    int i, k = 0;
+    int j = 1;
+
+    char str[100];
+    char s[2] = "#";
+    char *token;
+
+    for (i = 0; i < n; i++)
     {
-        scanf(" %s %s %d", parent, child, m);
+        scanf(" %s", str);
+        j = 1;
+        /* get the first token */
+        token = strtok(str, s);
+        strcpy(parent, token);
+
+        /* walk through other tokens */
+        while (token != NULL)
+        {
+            token = strtok(NULL, s);
+            // printf("masuk\n");
+            if (j == 1)
+            {
+                strcpy(child, token);
+            }
+            else if (j == 2)
+            {
+                int x = atoi(token);
+                m = x;
+            }
+            j++;
+        }
+
         if (strcmp(parent, "null") == 0)
         {
             makeTree(child, &T);
+            strcpy(akar, child);
         }
         else
         {
-            node = findSimpul(parent, T.root);
-            if (node != NULL)
+            if (strcmp(parent, akar) == 0)
             {
-                addChild(child, node);
+                addChild(child, T.root);
+            }
+            else
+            {
+                printf("masuk\n");
+                simpul *node = findSimpul(parent, T.root);
+                if (node != NULL)
+                {
+                    printf("masuk LAGI\n");
+                    addChild(child, node);
+                }
             }
         }
 
-        i++;
-    } while (i < n);
+        // makeTree("burana", &T);
 
-    // int i = 0;
-    // do
-    // {
+        // addChild("Caa", T.root);
+        // addChild("Daa", T.root);
 
-    //     if (strcmp(temp, "akar") == 0)
-    //     {
-    //         makeTree(simpul, &T);
-    //     }
-    //     else
-    //     {
-    //         searchParent(T.root, simpul, parent, temp);
-    //     }
-
-    //     i++;
-    // } while (i < n);
-
-    // makeTree('A', &T);
-    // addChild('B', T.root);
-    // addChild('C', T.root);
-    // addChild('D', T.root);
-    // simpul *node = findSimpul('B', T.root);
-    // if (node != NULL)
-    // {
-    //     addChild('E', node);
-    //     addChild('F', node);
-    // }
-
-    // node = findSimpul('C', T.root);
-    // if (node != NULL)
-    // {
-    //     addChild('G', node);
-    // }
-
-    // node = findSimpul('D', T.root);
-    // if (node != NULL)
-    // {
-    //     addChild('H', node);
-    //     addChild('I', node);
-    //     addChild('J', node);
-    // }
-
-    // node = findSimpul('J', T.root);
-    // if (node != NULL)
-    // {
-    //     addChild('K', node);
-    //     addChild('L', node);
-    //     addChild('M', node);
-    // }
-    // printf("=================\n");
-    // printf("preOrder\n");
-    // printTreePreOrder(T.root);
-    // printf("\n=================\n");
-    // printf("postOrder\n");
-    // printTreePostOrder(T.root);
-    // printf("\n=================\n");
-
-    // tree T2;
-    // copyTree(T.root, &T2.root);
-
-    // printTreePreOrder(T2.root);
-
-    // if (isEqual(T.root, T2.root) == 1)
-    // {
-    //     printf("pohon sama\n");
-    // }
-    // else
-    // {
-    //     printf("pohon tidak sama\n");
-    // }
-
-    // node = findSimpul('J', T.root);
-    // if (node != NULL)
-    // {
-    //     delChild('K', node);
-    //     delChild('L', node);
-    //     delChild('M', node);
-    // }
-    delAll(T.root);
+        // //buat input
+        // // for (k = 0; k < m; k++)
+        // // {
+        // //    scanf(" %s",)
+        // // }
+        printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
+    }
 
     printf("=================\n");
-    printf("preOrder setelah dihapus\n");
+    printf("preOrder\n");
     printTreePreOrder(T.root);
-    printf("\n=================\n");
     return 0;
 }

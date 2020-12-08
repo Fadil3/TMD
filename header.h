@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 #include <malloc.h>
+#include <stdlib.h>
 
 typedef struct smp *alamatsimpul;
 typedef struct smp
 {
-    char kontainer;
+    char kontainer[100];
     alamatsimpul sibling;
     alamatsimpul child;
 } simpul;
@@ -14,11 +16,11 @@ typedef struct
     simpul *root;
 } tree;
 
-void makeTree(char c, tree *T);
-void addChild(char c, simpul *root);
+void makeTree(char c[], tree *T);
+void addChild(char c[], simpul *root);
 void delAll(simpul *root);
-void delChild(char c, simpul *root);
-simpul *findSimpul(char c, simpul *root);
+void delChild(char c[], simpul *root);
+simpul *findSimpul(char c[], simpul *root);
 void printTreePreOrder(simpul *root);
 void printTreePostOrder(simpul *root);
 void copyTree(simpul *root1, simpul **root2);
