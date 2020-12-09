@@ -12,15 +12,38 @@ int main()
     char parent[100];
     char child[100];
     char akar[100];
+    char bawaan[100];
     // parent#child#jumlah_bawaan
 
-    int i, k = 0;
+    int i,
+        k = 0;
     int j = 1;
 
     char str[100];
     char s[2] = "#";
     char *token;
+    simpul *node;
 
+    // makeTree("burana", &T);
+    // addChild("srisiam", T.root);
+    // simpul *node = findSimpul("srisiam", T.root);
+    // if (node != NULL)
+    // {
+    //     addChild("sogodoll", node);
+    // }
+
+    // addChild("anosnum", T.root);
+    // node = findSimpul("anosnum", T.root);
+    // if (node != NULL)
+    // {
+    //     addChild("susanae", node);
+    // }
+
+    // node = findSimpul("sogodoll", T.root->child);
+    // if (node != NULL)
+    // {
+    //     addChild("hariefa", node);
+    // }
     for (i = 0; i < n; i++)
     {
         scanf(" %s", str);
@@ -59,11 +82,17 @@ int main()
             }
             else
             {
-                printf("masuk\n");
-                simpul *node = findSimpul(parent, T.root);
+                int masuk = 0;
+                node = findSimpul(parent, T.root);
                 if (node != NULL)
                 {
-                    printf("masuk LAGI\n");
+                    masuk = 1;
+                    addChild(child, node);
+                }
+
+                if (masuk == 0)
+                {
+                    node = findSimpul(parent, T.root->child);
                     addChild(child, node);
                 }
             }
@@ -74,12 +103,12 @@ int main()
         // addChild("Caa", T.root);
         // addChild("Daa", T.root);
 
-        // //buat input
-        // // for (k = 0; k < m; k++)
-        // // {
-        // //    scanf(" %s",)
-        // // }
-        printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
+        //buat input
+        for (k = 0; k < m; k++)
+        {
+            scanf(" %s", bawaan);
+        }
+        //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
     printf("=================\n");

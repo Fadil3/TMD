@@ -238,6 +238,8 @@ void printTreePreOrder(simpul *root)
     if (root != NULL)
     {
         printf(" %s ", root->kontainer);
+        printf(" %s ", root->bawaan);
+
         simpul *bantu = root->child;
         if (bantu != NULL)
         {
@@ -368,3 +370,5 @@ int isEqual(simpul *root1, simpul *root2)
     }
     return hasil;
 }
+
+void Addbawaan(char bawaan[], simpul *root) {}

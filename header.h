@@ -7,6 +7,7 @@ typedef struct smp *alamatsimpul;
 typedef struct smp
 {
     char kontainer[100];
+    char bawaan[100];
     alamatsimpul sibling;
     alamatsimpul child;
 } simpul;
@@ -25,3 +26,4 @@ void printTreePreOrder(simpul *root);
 void printTreePostOrder(simpul *root);
 void copyTree(simpul *root1, simpul **root2);
 int isEqual(simpul *root1, simpul *root2);
+void Addbaawan(char bawaan[], simpul *root);
