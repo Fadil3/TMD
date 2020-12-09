@@ -103,16 +103,24 @@ int main()
         // addChild("Caa", T.root);
         // addChild("Daa", T.root);
 
-        //buat input
+        //buat input  bawaaan
         for (k = 0; k < m; k++)
         {
             scanf(" %s", bawaan);
+            if (strcmp(parent, "null") == 0)
+            {
+                Addbawaan(bawaan, k, T.root);
+            }
+            else
+            {
+                Addbawaan(bawaan, k, node);
+            }
         }
         //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
-
+    // printf("tes bawaan :%s \n", T.root->bawaan[2]);
     printf("=================\n");
     printf("preOrder\n");
-    printTreePreOrder(T.root);
+    printTreePreOrder(T.root, m);
     return 0;
 }

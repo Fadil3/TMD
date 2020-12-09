@@ -233,35 +233,44 @@ simpul *findSimpul(char c[], simpul *root)
     return hasil;
 }
 
-void printTreePreOrder(simpul *root)
+void printTreePreOrder(simpul *root, int m)
 {
+    int ada, i = 0;
     if (root != NULL)
     {
         printf(" %s ", root->kontainer);
-        printf(" %s ", root->bawaan);
 
         simpul *bantu = root->child;
         if (bantu != NULL)
         {
             if (bantu->sibling == NULL)
             { /*jika memiliki satu simpulanak*/
-                printTreePreOrder(bantu);
+                printTreePreOrder(bantu, m);
             }
             else
             { /*jika memiliki banyak simpul anak*/
                 /*mencetak simpul anak*/
                 while (bantu->sibling != root->child)
                 {
-                    printTreePreOrder(bantu);
+                    printTreePreOrder(bantu, m);
                     bantu = bantu->sibling;
                 } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-                printTreePreOrder(bantu);
+                printTreePreOrder(bantu, m);
             }
         }
+        ada = 1;
     }
     else
     {
         printf("kosong");
+    }
+
+    if (ada == 1)
+    {
+        for (i = 0; i < m; i++)
+        {
+            printf(" %s ", root->bawaan[i]);
+        }
     }
 }
 
@@ -371,4 +380,10 @@ int isEqual(simpul *root1, simpul *root2)
     return hasil;
 }
 
-void Addbawaan(char bawaan[], simpul *root) {}
+void Addbawaan(char bawaan[], int k, simpul *root)
+{
+    if (root != NULL)
+    {
+        strcpy(root->bawaan[k], bawaan);
+    }
+}
