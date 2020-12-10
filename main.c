@@ -109,11 +109,12 @@ int main()
             scanf(" %s", bawaan);
             if (strcmp(parent, "null") == 0)
             {
-                Addbawaan(bawaan, k, T.root);
+                addBawaan(bawaan, k, T.root);
             }
             else
             {
-                Addbawaan(bawaan, k, node);
+                node = findSimpul(child, T.root);
+                addBawaan(bawaan, k, node);
             }
         }
         //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);

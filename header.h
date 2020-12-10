@@ -26,4 +26,5 @@ void printTreePreOrder(simpul *root, int m);
 void printTreePostOrder(simpul *root);
 void copyTree(simpul *root1, simpul **root2);
 int isEqual(simpul *root1, simpul *root2);
-void Addbawaan(char bawaan[], int k, simpul *root);
+void addBawaan(char bawaan[], int k, simpul *root);
+void printBawaan(int m, simpul *root);
