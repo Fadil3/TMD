@@ -2,9 +2,10 @@
 
 int main()
 {
+    //deklarasi
     tree T;
-    int n = 0;
-    int m = 0;
+    int i, k, m, n = 0;
+    int j = 1;
 
     //input banyaknya data
     scanf(" %d", &n);
@@ -16,82 +17,69 @@ int main()
     char bawaan[100];
     // parent#child#jumlah_bawaan
 
-    int i,
-        k = 0;
-    int j = 1;
-
+    //pemrosesan string
     char str[100];
-    char s[2] = "#";
+    char s[2] = "#"; // # sebagai pembatas string
     char *token;
     simpul *node;
 
-    // makeTree("burana", &T);
-    // addChild("srisiam", T.root);
-    // simpul *node = findSimpul("srisiam", T.root);
-    // if (node != NULL)
-    // {
-    //     addChild("sogodoll", node);
-    // }
-
-    // addChild("anosnum", T.root);
-    // node = findSimpul("anosnum", T.root);
-    // if (node != NULL)
-    // {
-    //     addChild("susanae", node);
-    // }
-
-    // node = findSimpul("sogodoll", T.root->child);
-    // if (node != NULL)
-    // {
-    //     addChild("hariefa", node);
-    // }
     for (i = 0; i < n; i++)
     {
+        //request input
         scanf(" %s", str);
         j = 1;
-        /* get the first token */
+
+        //ambil token pertama
         token = strtok(str, s);
+
+        //asumsi nya token pertama adalah parent
         strcpy(parent, token);
 
-        /* walk through other tokens */
+        // maju ke token selanjutnya
         while (token != NULL)
         {
             token = strtok(NULL, s);
-            // printf("masuk\n");
             if (j == 1)
             {
+                //copy ke child
                 strcpy(child, token);
             }
             else if (j == 2)
             {
+                //convert string ke token
                 int x = atoi(token);
                 m = x;
             }
             j++;
         }
 
+        //kalau parentnya null berarti dia root nya
         if (strcmp(parent, "null") == 0)
         {
+            //buat pohon
             makeTree(child, &T);
+            //copy ke root
             strcpy(akar, child);
         }
         else
         {
+            //kalau parent nya root
             if (strcmp(parent, akar) == 0)
             {
+                //tambahkan child sebagai anaknya root
                 addChild(child, T.root);
             }
             else
             {
-                int masuk = 0;
+                //cari simpul
                 node = findSimpul(parent, T.root);
                 if (node != NULL)
                 {
-                    masuk = 1;
                     addChild(child, node);
                 }
 
-                if (masuk == 0)
+                //kalau ngga ketemu, cari di childnya
+                if (!node)
                 {
                     node = findSimpul(parent, T.root->child);
                     addChild(child, node);
@@ -99,39 +87,40 @@ int main()
             }
         }
 
-        // makeTree("burana", &T);
-
-        // addChild("Caa", T.root);
-        // addChild("Daa", T.root);
-
         //buat input  bawaaan
         for (k = 0; k < m; k++)
         {
+            //scan bawaan
             scanf(" %s", bawaan);
+
+            //kalau parent nya null
             if (strcmp(parent, "null") == 0)
             {
+                //masukkan bawaan ke root
                 addBawaan(bawaan, k, m, T.root);
             }
             else
             {
+                //kalau parent nya bukan null child dimasukkan
                 node = findSimpul(child, T.root);
+
+                //jika findSimpul tidak menemukan
                 if (!node)
                 {
+                    //telusuri di child nya
                     node = findSimpul(child, T.root->child);
                 }
+                //masukkan bawaan
                 addBawaan(bawaan, k, m, node);
             }
         }
         //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
-    // printf("tes bawaan :%s \n", T.root->bawaan[2]);
     printf("=================\n");
     printf("preOrder\n");
     printTreePreOrder(T.root);
-
     printf("=================\n");
-    // node = findSimpul("anosmum", T.root);
-    // printBawaan(3, node);
+
     return 0;
 }

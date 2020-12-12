@@ -1,3 +1,10 @@
+/*
+Saya  Muhammad Rayhan Fadillah  mengerjakan  evaluasi 
+Tugas  Masa  Depan dalam  mata  kuliah Struktur Data
+untuk keberkahanNya maka saya tidak melakukan kecurangan 
+seperti yang telah dispesifikasikan. Aamiin.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
@@ -7,8 +14,8 @@ typedef struct smp *alamatsimpul;
 typedef struct smp
 {
     char kontainer[100];
-    char bawaan[50][100];
-    int m;
+    char bawaan[50][100]; //isi bawaaan
+    int m;                // banyak nya bawaan
     alamatsimpul sibling;
     alamatsimpul child;
 } simpul;
