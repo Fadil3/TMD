@@ -233,63 +233,42 @@ simpul *findSimpul(char c[], simpul *root)
     return hasil;
 }
 
-void printTreePreOrder(simpul *root, int m)
+void printTreePreOrder(simpul *root)
 {
-    int i, ada = 0;
+    int i = 0;
     if (root != NULL)
     {
-        printf(" %s ", root->kontainer);
+        i = 0;
+        printf(" %s \n", root->kontainer);
+        for (i = 0; i < root->m; i++)
+        {
+            printf(" %s \n", root->bawaan[i]);
+        }
 
         simpul *bantu = root->child;
         if (bantu != NULL)
         {
             if (bantu->sibling == NULL)
             { /*jika memiliki satu simpulanak*/
-                for (i = 0; i < m; i++)
-                {
-                    printf(" %s ", root->bawaan[i]);
-                }
-                printTreePreOrder(bantu, m);
+                printTreePreOrder(bantu);
             }
             else
             { /*jika memiliki banyak simpul anak*/
                 /*mencetak simpul anak*/
                 while (bantu->sibling != root->child)
                 {
-                    for (i = 0; i < m; i++)
-                    {
-                        printf(" %s ", root->bawaan[i]);
-                    }
-                    printTreePreOrder(bantu, m);
+                    printTreePreOrder(bantu);
                     bantu = bantu->sibling;
                 }
                 /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-                for (i = 0; i < m; i++)
-                {
-                    printf(" %s ", root->bawaan[i]);
-                }
-                printTreePreOrder(bantu, m);
+                printTreePreOrder(bantu);
             }
         }
-        // for (i = 0; i < m; i++)
-        // {
-        //     printf(" %s ", root->bawaan[i]);
-        // }
-        ada = 1;
     }
     else
     {
         printf("kosong");
     }
-    // printBawaan(m, root);
-
-    // if (ada == 1)
-    // {
-    //     for (i = 0; i < m; i++)
-    //     {
-    //         printf(" %s ", root->bawaan[i]);
-    //     }
-    // }
 }
 
 void printTreePostOrder(simpul *root)
@@ -398,12 +377,13 @@ int isEqual(simpul *root1, simpul *root2)
     return hasil;
 }
 
-void addBawaan(char bawaan[], int k, simpul *root)
+void addBawaan(char bawaan[], int k, int m, simpul *root)
 {
     if (root != NULL)
     {
         strcpy(root->bawaan[k], bawaan);
     }
+    root->m = m;
 }
 
 void printBawaan(int m, simpul *root)

@@ -3,7 +3,8 @@
 int main()
 {
     tree T;
-    int n, m = 0;
+    int n = 0;
+    int m = 0;
 
     //input banyaknya data
     scanf(" %d", &n);
@@ -109,19 +110,28 @@ int main()
             scanf(" %s", bawaan);
             if (strcmp(parent, "null") == 0)
             {
-                addBawaan(bawaan, k, T.root);
+                addBawaan(bawaan, k, m, T.root);
             }
             else
             {
                 node = findSimpul(child, T.root);
-                addBawaan(bawaan, k, node);
+                if (!node)
+                {
+                    node = findSimpul(child, T.root->child);
+                }
+                addBawaan(bawaan, k, m, node);
             }
         }
         //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
+
     // printf("tes bawaan :%s \n", T.root->bawaan[2]);
     printf("=================\n");
     printf("preOrder\n");
-    printTreePreOrder(T.root, m);
+    printTreePreOrder(T.root);
+
+    printf("=================\n");
+    // node = findSimpul("anosmum", T.root);
+    // printBawaan(3, node);
     return 0;
 }
