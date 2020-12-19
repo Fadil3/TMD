@@ -10,6 +10,9 @@ seperti yang telah dispesifikasikan. Aamiin.
 #include <malloc.h>
 #include <stdlib.h>
 
+int totalSpasi[100];
+int flag[50];
+
 typedef struct smp *alamatsimpul;
 typedef struct smp
 {
@@ -36,3 +39,6 @@ void copyTree(simpul *root1, simpul **root2);
 int isEqual(simpul *root1, simpul *root2);
 void addBawaan(char bawaan[], int k, int m, simpul *root);
 void printBawaan(int m, simpul *root);
+void ConnectSibling(simpul *root, simpul *smpl);
+void sort(simpul *root);
+void printSpasi();

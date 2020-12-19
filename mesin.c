@@ -1,5 +1,5 @@
 #include "header.h"
-
+int count, baris, flagged = 0;
 void makeTree(char c[], tree *T)
 {
     simpul *node;
@@ -235,21 +235,31 @@ simpul *findSimpul(char c[], simpul *root)
 
 void printTreePreOrder(simpul *root)
 {
-    int i = 0;
+    int i, j = 0;
     if (root != NULL)
     {
-        i = 0;
-        printf(" %s \n", root->kontainer);
+        // sort(root);
+        // if (baris != 0)
+        // {
+        //     printSpasi();
+        // }
+
+        printf("|%s\n", root->kontainer);
         for (i = 0; i < root->m; i++)
         {
-            printf(" %s \n", root->bawaan[i]);
+            // if (baris != 0)
+            // {
+            //     printSpasi();
+            // }
+            printf(".%s\n", root->bawaan[i]);
         }
+        // baris++;
 
         simpul *bantu = root->child;
         if (bantu != NULL)
         {
             if (bantu->sibling == NULL)
-            { /*jika memiliki satu simpulanak*/
+            { /*jika memiliki satu simpul anak*/
                 printTreePreOrder(bantu);
             }
             else
@@ -296,37 +306,75 @@ void printTreePostOrder(simpul *root)
     }
 }
 
-void copyTree(simpul *root1, simpul **root2)
+void ConnectSibling(simpul *root, simpul *smpl)
 {
+    //jika child sebelumnya belum punya sibling, kaitkan dengan yang baru
+    if (root->child->sibling == NULL)
+    {
+        smpl->sibling = root->child;
+        root->child->sibling = smpl;
+    }
+    //jika sudah ada
+    else
+    {
+        //cari sampai elemen terakhir sibling
+        simpul *last = root->child;
+        while (last->sibling != root->child)
+        {
+            last = last->sibling;
+        }
+        //kaiktan elemen terakhir sibling dengan yang baru
+        smpl->sibling = root->child;
+        last->sibling = smpl;
+    }
+}
+
+void copyTree(simpul *root1, simpul **root2)
+{ //menten
     if (root1 != NULL)
     {
         (*root2) = (simpul *)malloc(sizeof(simpul));
         strcpy((*root2)->kontainer, root1->kontainer);
-
         (*root2)->sibling = NULL;
         (*root2)->child = NULL;
-        if (root1->child != NULL)
+        simpul *bantu1 = root1->child;
+        simpul *bantu2 = (*root2)->child;
+        if (bantu1 != NULL)
         {
-            if (root1->child->sibling == NULL)
-            { /*jika memiliki satu simpulanak*/
-                copyTree(root1->child, &(*root2)->child);
+            //jika tidak punya sibling
+            if (bantu1->sibling == NULL)
+            {
+                //copy simpulnya dan semua child dari simpul tersebut
+                copyTree(bantu1, &bantu2);
+                //jadikan simpul tersebut sebagai child
+                (*root2)->child = bantu2;
             }
+            //jika punya sibling, cek semua sibling pohon pertama
             else
-            { /*jika memiliki banyak simpulanak*/
-                simpul *bantu1 = root1->child;
-                simpul *bantu2 = (*root2)->child;
+            {
                 while (bantu1->sibling != root1->child)
                 {
+                    //copy semua simpul child dari sibling tersebut
                     copyTree(bantu1, &bantu2);
+                    //jika child pohon kedua masih null, jadikan simpul baru sebagai child
+                    if ((*root2)->child == NULL)
+                    {
+                        (*root2)->child = bantu2;
+                    }
+                    //jika sudah ada child, jadikan sebagai sibling
+                    else
+                        ConnectSibling((*root2), bantu2);
+                    //cek sibling berikutnya
                     bantu1 = bantu1->sibling;
                     bantu2 = bantu2->sibling;
-                } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                }
+                //copy sibling terakhir dan jadikan sebagai sibling di pohon kedua
                 copyTree(bantu1, &bantu2);
+                ConnectSibling((*root2), bantu2);
             }
         }
     }
 }
-
 int isEqual(simpul *root1, simpul *root2)
 {
     int hasil = 1;
@@ -392,5 +440,72 @@ void printBawaan(int m, simpul *root)
     for (i = 0; i < m; i++)
     {
         printf(" %s ", root->bawaan[i]);
+    }
+}
+
+void sort(simpul *root)
+{
+
+    int i, j, key;
+
+    int length[100];
+    if (root->m > 0)
+    {
+        /* code */
+        for (i = 0; i < root->m; i++)
+        {
+            length[i] = strlen(root->bawaan[i]);
+        }
+
+        for (i = 1; i < root->m; i++)
+        {
+            key = length[i];
+            j = i - 1;
+
+            while (j >= 0 && key > length[j])
+            {
+                length[j + 1] = length[j];
+                j = j - 1;
+            }
+            length[j + 1] = key;
+        }
+
+        int a = strlen(root->kontainer);
+        if (a > length[0])
+        {
+            length[0] = a;
+        }
+
+        if (root->sibling != NULL)
+        {
+            //printf(" sibling %s\n", root->sibling);
+            // flag[flagged] = count;
+            // flagged++;
+            // if (flagged > 0)
+            // {
+            //     totalSpasi[count] += length[0] - totalSpasi[flag[flagged - 1]] + 1;
+            // }
+        }
+        // else
+        // {
+        //     totalSpasi[count] += length[0] + totalSpasi[count - 1] + 1;
+        // }
+        totalSpasi[count] += length[0] + totalSpasi[count - 1] + 1;
+    }
+    else
+    {
+        totalSpasi[count] += totalSpasi[count - 2] + 1;
+    }
+    // printf("total Spasi %d\n", totalSpasi[count]);
+    count++;
+}
+
+void printSpasi()
+{
+    int i, j = 0;
+
+    for (i = 0; i < totalSpasi[count - 2]; i++)
+    {
+        printf("-");
     }
 }

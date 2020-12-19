@@ -4,7 +4,7 @@ int main()
 {
     //deklarasi
     tree T;
-    int i, k, m, n = 0;
+    int i, k, m, n, o = 0;
     int j = 1;
 
     //input banyaknya data
@@ -114,6 +114,14 @@ int main()
                 addBawaan(bawaan, k, m, node);
             }
         }
+
+        // //request pindah
+        // scanf("%d", &o);
+        // for (k = 0; k < o; k++)
+        // {
+        //     /* code */
+        // }
+
         //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
@@ -121,6 +129,12 @@ int main()
     printf("preOrder\n");
     printTreePreOrder(T.root);
     printf("=================\n");
+
+    // for (i = 0; i < n; i++)
+    // {
+
+    //     printf("total Spasi %d\n", totalSpasi[i]);
+    // }
 
     return 0;
 }
