@@ -3,7 +3,7 @@
 int main()
 {
     //deklarasi
-    tree T;
+    tree T, T2, T3;
     int i, k, m, n, o = 0;
     int j = 1;
 
@@ -115,19 +115,44 @@ int main()
             }
         }
 
-        // //request pindah
-        // scanf("%d", &o);
-        // for (k = 0; k < o; k++)
-        // {
-        //     /* code */
-        // }
+        //request pindah
+        char pindah[100];
+        char target[100];
+        scanf("%d", &o);
+        for (k = 0; k < o; k++)
+        {
+            scanf("%s", pindah);
+            scanf("%s", target);
 
-        //printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
+            if (strcmp(target, "mandiri") == 0)
+            {
+                //kalau parent nya bukan null child dimasukkan
+                node = findSimpul(pindah, T.root);
+
+                //jika findSimpul tidak menemukan
+                if (!node)
+                {
+                    //telusuri di child nya
+                    node = findSimpul(pindah, T.root->child);
+                }
+                makeTree(pindah, &T2);
+                copyTree(node, &T2.root);
+                delChild("srisiam", T.root);
+            }
+        }
+
+        // printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
+    // copyTree(T.root, &T2.root);
     printf("=================\n");
-    printf("preOrder\n");
+    printf("pohon1 \n");
     printTreePreOrder(T.root);
+    printf("=================\n");
+
+    printf("=================\n");
+    printf("pohon2 \n");
+    printTreePreOrder(T2.root);
     printf("=================\n");
 
     // for (i = 0; i < n; i++)

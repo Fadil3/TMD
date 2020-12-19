@@ -30,7 +30,7 @@ typedef struct
 
 void makeTree(char c[], tree *T);
 void addChild(char c[], simpul *root);
-void delAll(simpul *root);
+void delAll(simpul **root);
 void delChild(char c[], simpul *root);
 simpul *findSimpul(char c[], simpul *root);
 void printTreePreOrder(simpul *root);

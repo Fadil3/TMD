@@ -55,35 +55,49 @@ void addChild(char c[], simpul *root)
     }
 }
 
-void delAll(simpul *root)
-{
-    if (root != NULL)
-    { /* jika simpul root tidak kosong*/
-        if (root->child != NULL)
+void delAll(simpul **root)
+{ //Dilakukan kalo emang siblingnya udah diatur, atau emang gapunya sibling
+    if ((*root) != NULL)
+    {
+        /* jika simpul root tidak kosong */
+        if ((*root)->child != NULL)
         {
-            if (root->child->sibling == NULL)
-            { /* jika hanya memiliki satu simpul anak*/
-                delAll(root->child);
-                free(root);
+
+            if ((*root)->child->sibling == NULL)
+            {
+                /* jika hanya memiliki satu simpul anak */
+
+                delAll(&(*root)->child);
+                free((*root)->child);
+                (*root)->child = NULL;
             }
             else
             {
+
                 simpul *bantu;
                 simpul *proses;
-                bantu = root->child;
-                while (bantu->sibling != root->child)
+                bantu = (*root)->child;
+                while (bantu->sibling != (*root)->child)
                 {
                     proses = bantu;
                     bantu = bantu->sibling;
-                    delAll(proses);
+                    delAll(&proses);
                 }
-                delAll(bantu);
+                delAll(&bantu);
+                free((*root)->child);
+                (*root)->child = NULL;
             }
-            free(root);
         }
-        else
+        printf("dibersihkan : %s ", (*root)->kontainer);
+        //(*root)->kontainer = '\0';
+
+        free(*root);
+        *root = NULL;
+
+        printf("done \n");
+        if (*root != NULL)
         {
-            free(root);
+            printf("awdjawdkjhakjsdbjksadbjkashgjkhasdf : %s \n", (*root)->kontainer);
         }
     }
 }
@@ -96,20 +110,22 @@ void delChild(char c[], simpul *root)
         if (hapus != NULL)
         {
             if (hapus->sibling == NULL)
-            { /*jika hanya mempunyai satu anak*/
+            {
+                /*jika hanya mempunyai satu anak*/
                 if (strcmp(root->child->kontainer, c) == 0)
                 {
-                    delAll(root->child);
+                    delAll(&root->child);
                     root->child = NULL;
                 }
                 else
                 {
-                    printf("tidak ada simpul anak dengan kontainerkarakter masukan\n");
+                    printf("tidak ada simpul anak dengan kontainer karakter masukan\n");
                 }
             }
             else
             {
-                /*jika memiliki lebihdarisatusimpulanak*/
+                /*jika memiliki lebih dari satu simpul
+				anak*/
                 simpul *prev = NULL;
                 /*mencari simpul yang akan dihapus*/
                 int ketemu = 0;
@@ -124,49 +140,69 @@ void delChild(char c[], simpul *root)
                         prev = hapus;
                         hapus = hapus->sibling;
                     }
-                } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                }
+
+                /*memproses simpul anak terakhir karena
+				belum terproses dalam pengulangan*/
                 if ((ketemu == 0) && (strcmp(hapus->kontainer, c) == 0))
                 {
                     ketemu = 1;
                 }
                 if (ketemu == 1)
                 {
-                    simpul *last = root->child; /*mencari simpul anak terakhiruntukmembantuproses ataupemeriksaanjikayang dihapusnantinyaanakterakhir*/
+                    simpul *last = root->child;
+                    /* mencari simpul anak terakhir untuk
+					membantu proses atau pemeriksaan jika yang
+					dihapus nantinya anak terakhir */
                     while (last->sibling != root->child)
                     {
                         last = last->sibling;
                     }
                     if (prev == NULL)
-                    { /*jika simpul yang dihapus anak pertama*/
+                    {
+                        /*jika simpul yang dihapus
+						anak pertama*/
                         if ((hapus->sibling == last) && (last->sibling == root->child))
-                        { /*jika hanya ada duaanak*/
+                        {
+                            /*jika hanya ada dua anak*/
                             root->child = last;
                             last->sibling = NULL;
                         }
                         else
-                        { /* jika memiliki simpul anak lebih dari dua simpul*/
+                        {
+                            /* jika memiliki simpul anak
+							lebih dari dua simpul */
                             root->child = hapus->sibling;
                             last->sibling = root->child;
                         }
                     }
                     else
                     {
-                        if ((prev == root->child) && (last->sibling == root->child))
-                        { /*jika hanya ada duasimpul anak dan yang dihapus adalah simpul anak kedua */
+
+                        if ((prev == root->child) && (root->child->sibling->sibling == root->child))
+                        { // diganti
+                            /* jika hanya ada dua simpul
+							anak dan yang dihapus adalah simpul
+							anak kedua */
+
                             root->child->sibling = NULL;
                         }
                         else
-                        { /* jikayang dihapus bukan simpul anak pertama dan simpul root memiliki simpul 
-                            anak lebih dari dua simpul*/
+                        {
+
+                            /* jika yang dihapus bukan            kalo ga diujung ditengah
+							simpul anak pertama dan simpul root
+							memiliki simpul anak lebih dari dua
+							simpul */
                             prev->sibling = hapus->sibling;
                             hapus->sibling = NULL;
                         }
                     }
-                    delAll(hapus);
+                    delAll(&hapus);
                 }
                 else
                 {
-                    printf("tidak ada simpul anak dengan kontainerkarakter masukan\n");
+                    printf("tidak ada simpul anak dengan kontainer karakter masukan\n");
                 }
             }
         }
@@ -333,8 +369,16 @@ void copyTree(simpul *root1, simpul **root2)
 { //menten
     if (root1 != NULL)
     {
+        int i = 0;
         (*root2) = (simpul *)malloc(sizeof(simpul));
+
         strcpy((*root2)->kontainer, root1->kontainer);
+        (*root2)->m = root1->m;
+        for (i = 0; i < root1->m; i++)
+        {
+            strcpy((*root2)->bawaan[i], root1->bawaan[i]);
+        }
+
         (*root2)->sibling = NULL;
         (*root2)->child = NULL;
         simpul *bantu1 = root1->child;
