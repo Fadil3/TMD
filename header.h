@@ -18,7 +18,8 @@ typedef struct smp
 {
     char kontainer[100];
     char bawaan[50][100]; //isi bawaaan
-    int m;                // banyak nya bawaan
+    char parent[100];
+    int m; // banyak nya bawaan
     alamatsimpul sibling;
     alamatsimpul child;
 } simpul;
@@ -42,3 +43,4 @@ void printBawaan(int m, simpul *root);
 void ConnectSibling(simpul *root, simpul *smpl);
 void sort(simpul *root);
 void printSpasi();
+void addParent(char parent[], simpul *root);

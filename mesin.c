@@ -88,6 +88,7 @@ void delAll(simpul **root)
                 (*root)->child = NULL;
             }
         }
+
         printf("dibersihkan : %s ", (*root)->kontainer);
         //(*root)->kontainer = '\0';
 
@@ -289,6 +290,7 @@ void printTreePreOrder(simpul *root)
             // }
             printf(".%s\n", root->bawaan[i]);
         }
+        printf("->%s\n", root->parent);
         // baris++;
 
         simpul *bantu = root->child;
@@ -366,7 +368,8 @@ void ConnectSibling(simpul *root, simpul *smpl)
 }
 
 void copyTree(simpul *root1, simpul **root2)
-{ //menten
+{
+    // printf("masuk\n");
     if (root1 != NULL)
     {
         int i = 0;
@@ -378,6 +381,7 @@ void copyTree(simpul *root1, simpul **root2)
         {
             strcpy((*root2)->bawaan[i], root1->bawaan[i]);
         }
+        strcpy((*root2)->parent, root1->parent);
 
         (*root2)->sibling = NULL;
         (*root2)->child = NULL;
@@ -476,6 +480,15 @@ void addBawaan(char bawaan[], int k, int m, simpul *root)
         strcpy(root->bawaan[k], bawaan);
     }
     root->m = m;
+}
+
+void addParent(char parent[], simpul *root)
+{
+    if (root != NULL)
+    {
+        strcpy(root->parent, parent);
+    }
+    // printf("parent %s\n", root->parent);
 }
 
 void printBawaan(int m, simpul *root)

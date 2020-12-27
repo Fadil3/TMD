@@ -3,7 +3,7 @@
 int main()
 {
     //deklarasi
-    tree T, T2, T3;
+    tree T, T2, T3, T4;
     int i, k, m, n, o = 0;
     int j = 1;
 
@@ -22,6 +22,7 @@ int main()
     char s[2] = "#"; // # sebagai pembatas string
     char *token;
     simpul *node;
+    simpul *node2;
 
     for (i = 0; i < n; i++)
     {
@@ -49,6 +50,7 @@ int main()
                 //convert string ke token
                 int x = atoi(token);
                 m = x;
+                printf("m = %d ", m);
             }
             j++;
         }
@@ -98,6 +100,7 @@ int main()
             {
                 //masukkan bawaan ke root
                 addBawaan(bawaan, k, m, T.root);
+                // addParent("null", T.root);
             }
             else
             {
@@ -112,48 +115,149 @@ int main()
                 }
                 //masukkan bawaan
                 addBawaan(bawaan, k, m, node);
+
+                // addParent(parent, node);
+                // printf("node parent %s\n", node->parent);
             }
         }
+
+        //kalau parent nya null
+        if (strcmp(parent, "null") == 0)
+        {
+
+            addParent("null", T.root);
+        }
+        else
+        {
+            //kalau parent nya bukan null child dimasukkan
+            node = findSimpul(child, T.root);
+
+            //jika findSimpul tidak menemukan
+            if (!node)
+            {
+                //telusuri di child nya
+                node = findSimpul(child, T.root->child);
+            }
+
+            addParent(parent, node);
+            // printf("node parent %s\n", node->parent);
+        }
+
+        copyTree(T.root, &T2.root);
 
         //request pindah
         char pindah[100];
         char target[100];
+        char temp[100];
+        int posisi = 0;
         scanf("%d", &o);
         for (k = 0; k < o; k++)
         {
+            posisi = 0;
             scanf("%s", pindah);
             scanf("%s", target);
 
+            //kalau target nya membuat pohon mandiri
             if (strcmp(target, "mandiri") == 0)
             {
-                //kalau parent nya bukan null child dimasukkan
-                node = findSimpul(pindah, T.root);
+                // cari simpul yang mau dipindah
+                node = findSimpul(pindah, T2.root);
 
                 //jika findSimpul tidak menemukan
                 if (!node)
                 {
                     //telusuri di child nya
-                    node = findSimpul(pindah, T.root->child);
+                    node = findSimpul(pindah, T2.root->child);
+                    posisi = 1;
                 }
-                makeTree(pindah, &T2);
-                copyTree(node, &T2.root);
-                delChild("srisiam", T.root);
+                printf("node parent 1 %s\n", node->parent);
+
+                /*=====================percobaaan===============*/
+                // cari simpul yang mau dipindah
+                node2 = findSimpul(node->parent, T2.root);
+                //jika findSimpul tidak menemukan
+                if (!node2)
+                {
+                    //telusuri di child nya
+                    node2 = findSimpul(node->parent, T2.root->child);
+                    posisi = 1;
+                }
+                // strcpy(temp, node2->parent);
+                printf("node2 child %s  posisi %d\n", node2->child, posisi);
+                /*=============================================*/
+
+                //membuat pohon baru
+                makeTree(pindah, &T3);
+
+                //copy simpul yang mau dipindah ke pohon baru
+                copyTree(node, &T3.root);
+
+                // hapus simpul di pohon lama
+                if (posisi == 1)
+                {
+                    // // printf("ada posisi 1\n");
+                    // delChild(temp, node);
+                    delAll(&node2);
+                }
+                else
+                {
+                    delChild(pindah, node2);
+                }
+            }
+            // kalau target nya pindah
+            else
+            {
+                printf("tes\n");
+                // cari naungan
+                node = findSimpul(target, T2.root);
+
+                //jika findSimpul tidak menemukan
+                if (!node)
+                {
+                    //telusuri di child nya
+                    node = findSimpul(target, T2.root->child);
+                }
+
+                // cari posisi simpul yang ingin pindah
+                node2 = findSimpul(pindah, T2.root);
+
+                //jika findSimpul tidak menemukan
+                if (!node2)
+                {
+                    printf("ada\n");
+                    //telusuri di child nya
+                    node2 = findSimpul(pindah, T2.root->child);
+                }
+
+                makeTree(pindah, &T4);
+                copyTree(node2, &T4.root);
+
+                // hapus simpul di pohon lama
+                delChild(pindah, T2.root);
+
+                // copyTree(T4.root, &node);
             }
         }
-
         // printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
-    // copyTree(T.root, &T2.root);
-    printf("=================\n");
-    printf("pohon1 \n");
-    printTreePreOrder(T.root);
-    printf("=================\n");
+    // // copyTree(T.root, &T2.root);
+    // printf("=================\n");
+    // printf("pohon awal:\n");
+    // printTreePreOrder(T.root);
+    // printf("=================\n");
 
-    printf("=================\n");
     printf("pohon2 \n");
     printTreePreOrder(T2.root);
     printf("=================\n");
+
+    printf("pohon3 \n");
+    printTreePreOrder(T3.root);
+    printf("=================\n");
+
+    // printf("pohon4 \n");
+    // printTreePreOrder(T4.root);
+    // printf("=================\n");
 
     // for (i = 0; i < n; i++)
     // {
