@@ -44,3 +44,4 @@ void ConnectSibling(simpul *root, simpul *smpl);
 void sort(simpul *root);
 void printSpasi();
 void addParent(char parent[], simpul *root);
+void migrasi(simpul *root, simpul *root2, simpul *tree);

@@ -291,7 +291,7 @@ void printTreePreOrder(simpul *root)
             printf(".%s\n", root->bawaan[i]);
         }
         printf("->%s\n", root->parent);
-        // baris++;
+        baris++;
 
         simpul *bantu = root->child;
         if (bantu != NULL)
@@ -310,6 +310,56 @@ void printTreePreOrder(simpul *root)
                 }
                 /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
                 printTreePreOrder(bantu);
+            }
+        }
+    }
+    else
+    {
+        printf("kosong");
+    }
+}
+
+void migrasi(simpul *root, simpul *root2, simpul *tree)
+{
+    simpul *node4;
+    int i, j = 0;
+    if (root != NULL)
+    {
+
+        addChild(root2->kontainer, root);
+
+        node4 = findSimpul(root2->kontainer, tree);
+        //jika findSimpul tidak menemukan
+        if (!node4)
+        {
+            //telusuri di child nya
+            node4 = findSimpul(root2->kontainer, tree->child);
+            // posisi = 1;
+        }
+
+        for (j = 0; j < root2->m; j++)
+        {
+            addBawaan(root2->bawaan[j], j, root2->m, node4);
+        }
+        addParent(root2->parent, node4);
+
+        simpul *bantu = root2->child;
+        if (bantu != NULL)
+        {
+            if (bantu->sibling == NULL)
+            { /*jika memiliki satu simpul anak*/
+                migrasi(root, bantu, tree);
+            }
+            else
+            { /*jika memiliki banyak simpul anak*/
+                /*mencetak simpul anak*/
+                while (bantu->sibling != root2->child)
+                {
+                    migrasi(root, bantu, tree);
+                    bantu = bantu->sibling;
+                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                migrasi(root, bantu, tree);
             }
         }
     }

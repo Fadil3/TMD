@@ -23,6 +23,7 @@ int main()
     char *token;
     simpul *node;
     simpul *node2;
+    simpul *node3;
 
     for (i = 0; i < n; i++)
     {
@@ -50,7 +51,7 @@ int main()
                 //convert string ke token
                 int x = atoi(token);
                 m = x;
-                printf("m = %d ", m);
+                // printf("m = %d ", m);
             }
             j++;
         }
@@ -121,7 +122,7 @@ int main()
             }
         }
 
-        //kalau parent nya null
+        //Isi parent
         if (strcmp(parent, "null") == 0)
         {
 
@@ -150,10 +151,12 @@ int main()
         char target[100];
         char temp[100];
         int posisi = 0;
+        int naungan = 0;
         scanf("%d", &o);
         for (k = 0; k < o; k++)
         {
             posisi = 0;
+            naungan = 0;
             scanf("%s", pindah);
             scanf("%s", target);
 
@@ -207,8 +210,8 @@ int main()
             // kalau target nya pindah
             else
             {
-                printf("tes\n");
-                // cari naungan
+
+                /*============== Cari Naungan ===============*/
                 node = findSimpul(target, T2.root);
 
                 //jika findSimpul tidak menemukan
@@ -216,44 +219,71 @@ int main()
                 {
                     //telusuri di child nya
                     node = findSimpul(target, T2.root->child);
+                    naungan = 1;
                 }
+                /*==============End of Cari Naungan ===============*/
 
-                // cari posisi simpul yang ingin pindah
+                /*============== Cari yang pindah ===============*/
                 node2 = findSimpul(pindah, T2.root);
 
                 //jika findSimpul tidak menemukan
                 if (!node2)
                 {
-                    printf("ada\n");
                     //telusuri di child nya
                     node2 = findSimpul(pindah, T2.root->child);
                 }
+                /*==============End of Cari yang pindah ===============*/
 
-                makeTree(pindah, &T4);
-                copyTree(node2, &T4.root);
+                /*============== Cari Parent yang pindah ===============*/
+                node3 = findSimpul(node2->parent, T2.root);
+                //jika findSimpul tidak menemukan
+                if (!node3)
+                {
+                    //telusuri di child nya
+                    node3 = findSimpul(node2->parent, T2.root->child);
+                    posisi = 1;
+                }
+                /*==============End of Cari Parent yang pindah ===============*/
 
-                // hapus simpul di pohon lama
-                delChild(pindah, T2.root);
+                // copyTree(node2, &node->child);
+                // ConnectSibling(T2.root->child, node->child->sibling);
+
+                if (node->child != NULL)
+                {
+                    migrasi(node, node2, T2.root);
+                }
+                else
+                {
+                    copyTree(node2, &node->child);
+                }
+
+                if (posisi == 1)
+                {
+                    delAll(&node3);
+                }
+                else
+                {
+                    delChild(pindah, node3);
+                }
+                // hapus simpul lama
 
                 // copyTree(T4.root, &node);
             }
         }
-        // printf("parent :%s child: %s bawaan: %d\n", parent, child, m);
     }
 
-    // // copyTree(T.root, &T2.root);
-    // printf("=================\n");
-    // printf("pohon awal:\n");
-    // printTreePreOrder(T.root);
-    // printf("=================\n");
+    printf("=================\n");
+    printf("pohon awal:\n");
+    printTreePreOrder(T.root);
+    printf("=================\n");
 
     printf("pohon2 \n");
     printTreePreOrder(T2.root);
     printf("=================\n");
 
-    printf("pohon3 \n");
-    printTreePreOrder(T3.root);
-    printf("=================\n");
+    // printf("pohon3 \n");
+    // printTreePreOrder(T3.root);
+    // printf("=================\n");
 
     // printf("pohon4 \n");
     // printTreePreOrder(T4.root);
