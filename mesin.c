@@ -275,22 +275,22 @@ void printTreePreOrder(simpul *root)
     int i, j = 0;
     if (root != NULL)
     {
-        // sort(root);
-        // if (baris != 0)
-        // {
-        //     printSpasi();
-        // }
+        sort(root);
+        if (baris != 0)
+        {
+            printSpasi();
+        }
 
         printf("|%s\n", root->kontainer);
         for (i = 0; i < root->m; i++)
         {
-            // if (baris != 0)
-            // {
-            //     printSpasi();
-            // }
+            if (baris != 0)
+            {
+                printSpasi();
+            }
             printf(".%s\n", root->bawaan[i]);
         }
-        printf("->%s\n", root->parent);
+        // printf("->%s\n", root->parent);
         baris++;
 
         simpul *bantu = root->child;

@@ -193,6 +193,7 @@ int main()
                 makeTree(pindah, &T3);
 
                 //copy simpul yang mau dipindah ke pohon baru
+                addParent("null", node);
                 copyTree(node, &T3.root);
 
                 // hapus simpul di pohon lama
@@ -248,6 +249,7 @@ int main()
                 // copyTree(node2, &node->child);
                 // ConnectSibling(T2.root->child, node->child->sibling);
 
+                addParent(node->kontainer, node2);
                 if (node->child != NULL)
                 {
                     migrasi(node, node2, T2.root);
@@ -257,6 +259,7 @@ int main()
                     copyTree(node2, &node->child);
                 }
 
+                // hapus simpul lama
                 if (posisi == 1)
                 {
                     delAll(&node3);
@@ -265,7 +268,6 @@ int main()
                 {
                     delChild(pindah, node3);
                 }
-                // hapus simpul lama
 
                 // copyTree(T4.root, &node);
             }
@@ -277,13 +279,13 @@ int main()
     printTreePreOrder(T.root);
     printf("=================\n");
 
-    printf("pohon2 \n");
+    printf("pohon pindah naungan:\n");
     printTreePreOrder(T2.root);
     printf("=================\n");
 
-    // printf("pohon3 \n");
-    // printTreePreOrder(T3.root);
-    // printf("=================\n");
+    printf("pohon mandiri: \n");
+    printTreePreOrder(T3.root);
+    printf("=================\n");
 
     // printf("pohon4 \n");
     // printTreePreOrder(T4.root);
