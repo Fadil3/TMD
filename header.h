@@ -11,7 +11,8 @@ seperti yang telah dispesifikasikan. Aamiin.
 #include <stdlib.h>
 
 int totalSpasi[100];
-int flag[50];
+int spasiLevel[100];
+int masuk;
 
 typedef struct smp *alamatsimpul;
 typedef struct smp
@@ -20,6 +21,7 @@ typedef struct smp
     char bawaan[50][100]; //isi bawaaan
     char parent[100];
     int m; // banyak nya bawaan
+    int level;
     alamatsimpul sibling;
     alamatsimpul child;
 } simpul;
@@ -27,21 +29,25 @@ typedef struct smp
 typedef struct
 {
     simpul *root;
+    simpul *temp;
 } tree;
 
 void makeTree(char c[], tree *T);
-void addChild(char c[], simpul *root);
+void addChild(char c[], simpul *root, int status);
 void delAll(simpul **root);
 void delChild(char c[], simpul *root);
 simpul *findSimpul(char c[], simpul *root);
 void printTreePreOrder(simpul *root);
 void printTreePostOrder(simpul *root);
-void copyTree(simpul *root1, simpul **root2);
-int isEqual(simpul *root1, simpul *root2);
+void copyTree(simpul *root1, simpul **root2, int status);
 void addBawaan(char bawaan[], int k, int m, simpul *root);
 void printBawaan(int m, simpul *root);
 void ConnectSibling(simpul *root, simpul *smpl);
 void sort(simpul *root);
-void printSpasi();
+void printSpasi(int level);
 void addParent(char parent[], simpul *root);
 void migrasi(simpul *root, simpul *root2, simpul *tree);
+void aturSpasi(simpul *root);
+void aturLevel(simpul *root, simpul *tree);
+
+void resetSpasi(int n);

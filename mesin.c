@@ -1,5 +1,10 @@
 #include "header.h"
-int count, baris, flagged = 0;
+int baris = 0;
+
+char temp_parent[100];
+int temp_level = 0;
+simpul *parent;
+simpul *parent_mandiri;
 void makeTree(char c[], tree *T)
 {
     simpul *node;
@@ -10,14 +15,27 @@ void makeTree(char c[], tree *T)
     (*T).root = node;
 }
 
-void addChild(char c[], simpul *root)
+void addChild(char c[], simpul *root, int status)
 {
     if (root != NULL)
     { /* jika simpul root tidak kosong, berarti 
         dapat ditambahkan simpul anak */
         simpul *baru;
-        baru = (simpul *)malloc(sizeof(simpul));
+
+        if (status < 2)
+        {
+
+            baru = (simpul *)malloc(sizeof(simpul));
+            /* code */
+        }
+
         strcpy(baru->kontainer, c);
+
+        if (status == 1)
+        {
+            //add level
+            baru->level = root->level + 1;
+        }
 
         baru->child = NULL;
         if (root->child == NULL)
@@ -89,17 +107,17 @@ void delAll(simpul **root)
             }
         }
 
-        printf("dibersihkan : %s ", (*root)->kontainer);
+        // printf("dibersihkan : %s ", (*root)->kontainer);
         //(*root)->kontainer = '\0';
 
         free(*root);
         *root = NULL;
 
-        printf("done \n");
-        if (*root != NULL)
-        {
-            printf("awdjawdkjhakjsdbjksadbjkashgjkhasdf : %s \n", (*root)->kontainer);
-        }
+        // printf("done \n");
+        // if (*root != NULL)
+        // {
+        //     printf("awdjawdkjhakjsdbjksadbjkashgjkhasdf : %s \n", (*root)->kontainer);
+        // }
     }
 }
 
@@ -115,7 +133,7 @@ void delChild(char c[], simpul *root)
                 /*jika hanya mempunyai satu anak*/
                 if (strcmp(root->child->kontainer, c) == 0)
                 {
-                    delAll(&root->child);
+                    // delAll(&root->child);
                     root->child = NULL;
                 }
                 else
@@ -199,7 +217,7 @@ void delChild(char c[], simpul *root)
                             hapus->sibling = NULL;
                         }
                     }
-                    delAll(&hapus);
+                    // delAll(&hapus);
                 }
                 else
                 {
@@ -222,11 +240,11 @@ simpul *findSimpul(char c[], simpul *root)
         else
         {
             simpul *bantu = root->child;
-
             if (bantu != NULL)
             {
                 if (bantu->sibling == NULL)
-                { /*jika memiliki satu simpulanak*/
+                {
+                    /*jika memiliki satu simpul anak*/
                     if (strcmp(bantu->kontainer, c) == 0)
                     {
                         hasil = bantu;
@@ -237,8 +255,10 @@ simpul *findSimpul(char c[], simpul *root)
                     }
                 }
                 else
-                { /*jika memiliki banyak simpulanak*/
+                {
+                    /*jika memiliki banyak simpul anak*/
                     int ketemu = 0;
+                    // kalo ga di ujung
                     while ((bantu->sibling != root->child) && (ketemu == 0))
                     {
                         if (strcmp(bantu->kontainer, c) == 0)
@@ -249,9 +269,15 @@ simpul *findSimpul(char c[], simpul *root)
                         else
                         {
                             hasil = findSimpul(c, bantu);
+                            if (hasil != NULL)
+                            {
+                                ketemu = 1;
+                            }
                             bantu = bantu->sibling;
                         }
-                    } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                    }
+                    /*memproses simpul anak terakhir karena belum terproses dalam
+					pengulangan*/
                     if (ketemu == 0)
                     {
                         if (strcmp(bantu->kontainer, c) == 0)
@@ -275,22 +301,31 @@ void printTreePreOrder(simpul *root)
     int i, j = 0;
     if (root != NULL)
     {
-        sort(root);
-        if (baris != 0)
+        // sort(root);
+        if (baris > 0)
         {
-            printSpasi();
+            printf("\n");
+        }
+
+        if (root->level != 0)
+        {
+            printSpasi(root->level);
         }
 
         printf("|%s\n", root->kontainer);
         for (i = 0; i < root->m; i++)
         {
-            if (baris != 0)
+            if (root->level != 0)
             {
-                printSpasi();
+                printSpasi(root->level);
             }
-            printf(".%s\n", root->bawaan[i]);
+            printf(" %s\n", root->bawaan[i]);
         }
-        // printf("->%s\n", root->parent);
+
+        // printf("parent ->%s\n", root->parent);
+        // printf("level ->%d\n", root->level);
+        // printf("spasi ->%d\n", spasiLevel[root->level]);
+
         baris++;
 
         simpul *bantu = root->child;
@@ -321,27 +356,35 @@ void printTreePreOrder(simpul *root)
 
 void migrasi(simpul *root, simpul *root2, simpul *tree)
 {
-    simpul *node4;
+    simpul *node;
+
     int i, j = 0;
     if (root != NULL)
     {
+        addChild(root2->kontainer, root, 0);
 
-        addChild(root2->kontainer, root);
-
-        node4 = findSimpul(root2->kontainer, tree);
+        node = findSimpul(root2->kontainer, tree);
         //jika findSimpul tidak menemukan
-        if (!node4)
-        {
-            //telusuri di child nya
-            node4 = findSimpul(root2->kontainer, tree->child);
-            // posisi = 1;
-        }
 
         for (j = 0; j < root2->m; j++)
         {
-            addBawaan(root2->bawaan[j], j, root2->m, node4);
+            addBawaan(root2->bawaan[j], j, root2->m, node);
         }
-        addParent(root2->parent, node4);
+
+        if (masuk == 0)
+        {
+            strcpy(node->parent, root->kontainer);
+            node->level = root->level + 1;
+        }
+        else
+        {
+            strcpy(node->parent, parent->kontainer);
+            node->level = parent->level + 1;
+        }
+        strcpy(temp_parent, node->kontainer);
+        parent = findSimpul(temp_parent, tree);
+        //jika findSimpul tidak menemukan
+        masuk++;
 
         simpul *bantu = root2->child;
         if (bantu != NULL)
@@ -417,9 +460,9 @@ void ConnectSibling(simpul *root, simpul *smpl)
     }
 }
 
-void copyTree(simpul *root1, simpul **root2)
+void copyTree(simpul *root1, simpul **root2, int status)
 {
-    // printf("masuk\n");
+
     if (root1 != NULL)
     {
         int i = 0;
@@ -433,6 +476,8 @@ void copyTree(simpul *root1, simpul **root2)
         }
         strcpy((*root2)->parent, root1->parent);
 
+        (*root2)->level = 0;
+
         (*root2)->sibling = NULL;
         (*root2)->child = NULL;
         simpul *bantu1 = root1->child;
@@ -443,7 +488,7 @@ void copyTree(simpul *root1, simpul **root2)
             if (bantu1->sibling == NULL)
             {
                 //copy simpulnya dan semua child dari simpul tersebut
-                copyTree(bantu1, &bantu2);
+                copyTree(bantu1, &bantu2, status);
                 //jadikan simpul tersebut sebagai child
                 (*root2)->child = bantu2;
             }
@@ -453,7 +498,7 @@ void copyTree(simpul *root1, simpul **root2)
                 while (bantu1->sibling != root1->child)
                 {
                     //copy semua simpul child dari sibling tersebut
-                    copyTree(bantu1, &bantu2);
+                    copyTree(bantu1, &bantu2, status);
                     //jika child pohon kedua masih null, jadikan simpul baru sebagai child
                     if ((*root2)->child == NULL)
                     {
@@ -467,60 +512,49 @@ void copyTree(simpul *root1, simpul **root2)
                     bantu2 = bantu2->sibling;
                 }
                 //copy sibling terakhir dan jadikan sebagai sibling di pohon kedua
-                copyTree(bantu1, &bantu2);
+                copyTree(bantu1, &bantu2, status);
                 ConnectSibling((*root2), bantu2);
             }
         }
     }
 }
-int isEqual(simpul *root1, simpul *root2)
+
+void aturLevel(simpul *root, simpul *tree)
 {
-    int hasil = 1;
-    if ((root1 != NULL) && (root2 != NULL))
+    int i, j = 0;
+    simpul *node;
+    if (root != NULL)
     {
-        if (strcmp(root1->kontainer, root2->kontainer) != 0)
+        // level saat ini adalah level parent + 1
+        if (strcmp(root->parent, "null") != 0)
         {
-            hasil = 0;
+            node = findSimpul(root->parent, tree);
+            root->level = node->level + 1;
         }
-        else
+        simpul *bantu = root->child;
+        if (bantu != NULL)
         {
-            if ((root1->child != NULL) && (root2->child != NULL))
-            {
-                if (root1->child->sibling == NULL)
-                { /*jika memiliki satu simpulanak*/
-                    hasil = isEqual(root1->child, root2->child);
+            if (bantu->sibling == NULL)
+            { /*jika memiliki satu simpul anak*/
+                aturLevel(bantu, tree);
+            }
+            else
+            { /*jika memiliki banyak simpul anak*/
+                /*mencetak simpul anak*/
+                while (bantu->sibling != root->child)
+                {
+                    aturLevel(bantu, tree);
+                    bantu = bantu->sibling;
                 }
-                else
-                { /*jika memiliki banyak simpulanak*/
-                    simpul *bantu1 = root1->child;
-                    simpul *bantu2 = root2->child;
-                    while (bantu1->sibling != root1->child)
-                    {
-                        if ((bantu1 != NULL) && (bantu2 != NULL))
-                        {
-                            hasil = isEqual(bantu1, bantu2);
-                            bantu1 = bantu1->sibling;
-                            bantu2 = bantu2->sibling;
-                        }
-                        else
-                        {
-                            hasil = 0;
-                            break;
-                        }
-                    } /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-                    hasil = isEqual(bantu1, bantu2);
-                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                aturLevel(bantu, tree);
             }
         }
     }
     else
     {
-        if ((root1 != NULL) || (root2 != NULL))
-        {
-            hasil = 0;
-        }
+        printf("kosong");
     }
-    return hasil;
 }
 
 void addBawaan(char bawaan[], int k, int m, simpul *root)
@@ -538,7 +572,6 @@ void addParent(char parent[], simpul *root)
     {
         strcpy(root->parent, parent);
     }
-    // printf("parent %s\n", root->parent);
 }
 
 void printBawaan(int m, simpul *root)
@@ -556,6 +589,8 @@ void sort(simpul *root)
     int i, j, key;
 
     int length[100];
+
+    //sort dengan insertion sort
     if (root->m > 0)
     {
         /* code */
@@ -577,42 +612,93 @@ void sort(simpul *root)
             length[j + 1] = key;
         }
 
+        //kalau ternyata simpul nya lebih panjang
         int a = strlen(root->kontainer);
         if (a > length[0])
         {
             length[0] = a;
         }
-
-        if (root->sibling != NULL)
-        {
-            //printf(" sibling %s\n", root->sibling);
-            // flag[flagged] = count;
-            // flagged++;
-            // if (flagged > 0)
-            // {
-            //     totalSpasi[count] += length[0] - totalSpasi[flag[flagged - 1]] + 1;
-            // }
-        }
-        // else
-        // {
-        //     totalSpasi[count] += length[0] + totalSpasi[count - 1] + 1;
-        // }
-        totalSpasi[count] += length[0] + totalSpasi[count - 1] + 1;
     }
     else
     {
-        totalSpasi[count] += totalSpasi[count - 2] + 1;
+        //kalau simpulnya ngga punya child
+        int a = strlen(root->kontainer);
+        length[0] = a;
     }
-    // printf("total Spasi %d\n", totalSpasi[count]);
-    count++;
+
+    // isi spasilevel
+    if (spasiLevel[root->level] == 0)
+    {
+        spasiLevel[root->level] += length[0] + 1;
+    }
+    else if (length[0] + 1 > spasiLevel[root->level])
+    {
+        spasiLevel[root->level] = length[0] + 1;
+    }
 }
 
-void printSpasi()
+void printSpasi(int level)
 {
     int i, j = 0;
+    int spasi = (spasiLevel[level - 1]);
+    int n = 0;
 
-    for (i = 0; i < totalSpasi[count - 2]; i++)
+    //tambah dengan spasi sebelumnya
+    for (j = level - 2; j >= 0; j--)
     {
-        printf("-");
+        n += spasiLevel[j];
+    }
+
+    spasi += n;
+    for (i = 0; i < spasi; i++)
+    {
+        printf(" ");
+    }
+}
+
+void aturSpasi(simpul *root)
+{
+    int i, j = 0;
+    if (root != NULL)
+    {
+        //sorting
+        sort(root);
+
+        simpul *bantu = root->child;
+        if (bantu != NULL)
+        {
+            if (bantu->sibling == NULL)
+            { /*jika memiliki satu simpul anak*/
+                aturSpasi(bantu);
+            }
+            else
+            { /*jika memiliki banyak simpul anak*/
+                /*mencetak simpul anak*/
+                while (bantu->sibling != root->child)
+                {
+                    aturSpasi(bantu);
+                    bantu = bantu->sibling;
+                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                aturSpasi(bantu);
+            }
+        }
+    }
+    else
+    {
+        printf("kosong");
+    }
+}
+
+void resetSpasi(int n)
+{
+    //reset semua angka
+    int i = 0;
+    for (i = 0; i < n; i++)
+    {
+        totalSpasi[i] = 0;
+        spasiLevel[i] = 0;
+        temp_level = 0;
+        baris = 0;
     }
 }
